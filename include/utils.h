@@ -14,6 +14,10 @@
 #include <cstdlib>
 #include <cstddef>
 #include <chrono>
+#include <future>
+#include <thread>
+#include <exception>
+#include <stdexcept>
 
 #define SWAP(a,b) { \
    (a) ^= (b); \

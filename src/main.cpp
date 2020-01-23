@@ -1,44 +1,33 @@
 // C++ File for main
 
-#include <cstdio>
-#include <stdlib.h>
-#include <cmath>
-
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_complex_math.h>
-
-#include "utils.h"
+#include "thread_func1.h"
+#include "thread_func2.h"
 
 int main( int argc, char* argv[] ) {
   
-  int num_vals = 256;
-  float vals[num_vals];
+  int num_in_vals1 = 10;
+  int num_in_vals2 = 20;
+  int in_vals1[num_in_vals1];
+  int in_vals2[num_in_vals2];
+  int out_vals1[num_in_vals1];
+  int out_vals2[num_in_vals2];
 
-  float upper = 2000.0;
-  float lower = 1500.0;
+  int upper  = 256;
+  int lower = 12;
 
-  gen_vals<float>( vals, upper, lower, num_vals );  
-  printf("Input Values:\n");
-  printf_floats( vals, 10 );
+  gen_vals<int>( in_vals1, upper, lower, num_in_vals1 );  
+  gen_vals<int>( in_vals2, upper, lower, num_in_vals2 );
 
-  int order = 2;
-  float m[order];
-  gsl_complex p[order];
-  //m = numpy.arange(-N+1, N, 2)
-  m[0] = -1;
-  m[1] = 1;
+  printf("Input Values 1:\n");
+  printf_ints( in_vals1, num_in_vals1 );
+  
+  printf("Input Values 2:\n");
+  printf_ints( in_vals2, num_in_vals2 );
 
-  //p = -numpy.exp(1j * pi * m / (2 * N))
-  double temp_x = M_PI/(2*order);
-  printf("temp_x is %13.12f\n", temp_x );
-  for( int index = 0; index < order; index++ ) {
-     double temp_mx = m[index] * temp_x;
-     printf("temp_mx is %13.12f\n", temp_mx );
-
-     gsl_complex ctemp_mx = gsl_complex_rect( 0.0, temp_mx );
-     p[index] = gsl_complex_negative(gsl_complex_exp( ctemp_mx ));
-     printf("p[%d] = %f + j%f\n", index, GSL_REAL(p[index]), GSL_IMAG(p[index]) );
-  }
+  std::future<int> thread1_result = std::async( std::launch::async, &thread_func1, 
+      &(out_vals1[0]), &(in_vals1[0]), num_in_vals1 );
+  std::future<int> thread2_result = std::async( std::launch::async, &thread_func2,
+      &(out_vals2[0]), &(in_vals2[0]), num_in_vals2 );
   return 0;
 }
 
