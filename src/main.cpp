@@ -1,7 +1,7 @@
 // C++ File for main
 
-#include "thread_func1.h"
-#include "thread_func2.h"
+#include "ThreadFunctor1.h"
+#include "ThreadFunctor2.h"
 
 int main( int argc, char* argv[] ) {
   
@@ -24,10 +24,12 @@ int main( int argc, char* argv[] ) {
   printf("Input Values 2:\n");
   printf_ints( in_vals2, num_in_vals2 );
 
-  std::future<int> thread1_result = std::async( std::launch::async, &thread_func1, 
-      &(out_vals1[0]), &(in_vals1[0]), num_in_vals1 );
-  std::future<int> thread2_result = std::async( std::launch::async, &thread_func2,
-      &(out_vals2[0]), &(in_vals2[0]), num_in_vals2 );
+  ThreadFunctor1 tf1( &(out_vals1[0]), &(in_vals1[0]), num_in_vals1 );
+  ThreadFunctor2 tf2( &(out_vals2[0]), &(in_vals2[0]), num_in_vals2 );
+
+  std::future<void> thread1_result = std::async( std::launch::async, tf1 );
+  std::future<void> thread2_result = std::async( std::launch::async, tf2 );
+  
   return 0;
 }
 

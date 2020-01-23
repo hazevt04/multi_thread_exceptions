@@ -10,8 +10,8 @@ set(EXEC_NAME "mthread_exceptions")
 
 set(SRCS
    "src/utils.cpp"
-   "src/thread_func1.cpp"
-   "src/thread_func2.cpp"
+   "src/ThreadFunctor1.cpp"
+   "src/ThreadFunctor2.cpp"
    "src/main.cpp"
    )
 
