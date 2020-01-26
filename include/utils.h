@@ -14,8 +14,7 @@
 #include <cstdlib>
 #include <cstddef>
 #include <chrono>
-#include <future>
-#include <thread>
+#include <atomic>
 #include <exception>
 #include <stdexcept>
 
@@ -95,5 +94,6 @@ void printf_ulongs( unsigned long* const vals, const int num_vals );
 #define try_delete( ptr ) { \
   if (ptr) delete [] ptr; \
 }
+
 
 #endif

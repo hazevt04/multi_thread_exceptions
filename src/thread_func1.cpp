@@ -2,19 +2,29 @@
 
 #include "thread_func1.h"
 
-int thread_func1( int* out_vals, const int* in_vals, const int num_in_vals ) {
-   try {
-      if ( num_in_vals > 25 ) {
-         throw std::runtime_error("Too many values for thread_func1");
+extern std::atomic<bool> error_flag;
+
+void* thread_func1( void* args ) {
+   thread_args_t* thread_args = (thread_args_t*)args;
+   
+   for ( int index = 0; index < thread_args->num_in_vals; index++ ) {
+      thread_args->out_vals[index] = thread_args->in_vals[index]/(2*(index+1));
+      printf( "thread1: out_vals[%d] = %d\n", index, thread_args->out_vals[index] );
+
+      if ( index > 5 ) {
+         printf( "thread1: Simulating error. Index is %d of %d. Exiting and setting error flag for thread 2 to see.\n",
+            index, thread_args->num_in_vals );
+         error_flag = true;
+         break;
       }
 
-      for ( int index = 0; index < num_in_vals; index++ ) {
-         out_vals[index] = in_vals[index]/(2*(index+1));
+      if (error_flag.load()) {
+         printf( "thread1: Exiting due to error detected.\n" );
+         return NULL;
       }
-      return SUCCESS;
-   } catch ( std::exception &ex ) {
-      printf( "ERROR: %s\n", ex.what() );
    }
+   printf( "\n" );   
+   return NULL;
 }
 
 
